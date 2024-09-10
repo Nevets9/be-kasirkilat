@@ -1,13 +1,19 @@
+const Produk = require('../models/produkModel');
+const Order = require('../models/orderModel');
+const OrderItem = require('../models/orderItemModel');
+
+exports.getAllOrders = async (req, res) => {
+  const orders = await Order.find();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      orders,
+    },
+  });
+};
+
 exports.createOrder = async (req, res) => {
-  const {
-    order_items,
-    customer_id,
-    payment_method,
-    tax,
-    coupon,
-    discount_amount,
-    employee_number,
-  } = req.body;
+  const { order_items, payment_method } = req.body;
 
   try {
     let totalPrice = 0;
@@ -34,21 +40,11 @@ exports.createOrder = async (req, res) => {
       })
     );
 
-    // Terapkan pajak dan diskon dari kupon
-    const totalAfterDiscount = totalPrice - (discount_amount || 0);
-    const totalWithTax = totalAfterDiscount + (tax || 0);
-
-    // Buat order baru
     const order = new Order({
-      customer_id: customer_id || null,
-      total_price: totalWithTax,
+      total_price: totalPrice,
       order_items: createdOrderItems,
       payment_method: payment_method || 'cash',
       payment_status: 'unpaid',
-      tax: tax || 0,
-      coupon: coupon || null,
-      discount_amount: discount_amount || 0,
-      employee_number: employee_number,
     });
 
     await order.save();
