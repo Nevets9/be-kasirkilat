@@ -19,7 +19,10 @@ const produkSchema = new mongoose.Schema(
       enum: ['makanan', 'minuman', 'snack'],
       required: [true, 'Tipe produk wajib diisi'],
     },
-    slug_produk: { type: String },
+    slug_produk: {
+      type: String,
+      unique: true,
+    },
     gambar_produk: { type: String },
   },
   { timestamps: true }
