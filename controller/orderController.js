@@ -6,6 +6,7 @@ exports.getAllOrders = async (req, res) => {
   const orders = await Order.find();
   res.status(200).json({
     status: 'success',
+    result: orders.length,
     data: {
       orders,
     },
