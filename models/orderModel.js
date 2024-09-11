@@ -21,8 +21,14 @@ const orderSchema = new mongoose.Schema(
     },
     order_items: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'OrderItem',
+        product_id: {
+          type: String,
+          required: [true, 'ID produk wajib diisi'],
+        },
+        quantity: {
+          type: Number,
+          required: [true, 'Jumlah wajib diisi'],
+        },
       },
     ],
     payment_method: {
@@ -30,19 +36,19 @@ const orderSchema = new mongoose.Schema(
       enum: ['cash', 'e_wallet', 'bank_transfer'],
       required: [true, 'Metode pembayaran wajib diisi'],
     },
-    tax: {
-      type: Number,
-      required: [true, 'Pajak wajib diisi'],
-      default: 0.11,
-    },
-    coupon: {
-      type: String,
-      default: null,
-    },
-    discount_amount: {
-      type: Number,
-      default: 0,
-    },
+    // tax: {
+    //   type: Number,
+    //   required: [true, 'Pajak wajib diisi'],
+    //   default: 0.11,
+    // },
+    // coupon: {
+    //   type: String,
+    //   default: null,
+    // },
+    // discount_amount: {
+    //   type: Number,
+    //   default: 0,
+    // },
   },
   { timestamps: true }
 );
