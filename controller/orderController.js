@@ -54,6 +54,8 @@ exports.createOrder = async (req, res) => {
     let totalPrice = 0;
     let order_items_detail = [];
 
+    // Looping semua isi dari body request, dengan nama order_items
+
     order_items.map(async (item) => {
       console.log('a');
       let items = {
@@ -64,10 +66,16 @@ exports.createOrder = async (req, res) => {
       order_items_detail.push(items);
     });
 
+    const result = await Order.create({
+      order_items: order_items_detail,
+      total_price: 696969,
+      payment_method: 'cash',
+    });
+
     res.status(201).send({
       status: 'success',
       data: {
-        order_items_detail,
+        result,
       },
     });
   } catch (err) {
