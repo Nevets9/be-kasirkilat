@@ -15,56 +15,26 @@ exports.getAllOrders = async (req, res) => {
 exports.createOrder = async (req, res) => {
   const { order_items, payment_method } = req.body;
 
+  let totalPrice = 0;
+  let order_items_detail = [];
   try {
-    // const createdOrderItems = await Promise.all(
-    //   order_items.map(async (item) => {
-    //     const produk = await Produk.findById(item.product_id);
-    //     if (!produk) {
-    //       throw new Error(
-    //         `Produk dengan ID ${item.product_id} tidak ditemukan`
-    //       );
-    //     }
-
-    //     const orderItem = new OrderItem({
-    //       order_id: null,
-    //       product_id: produk._id,
-    //       quantity: item.quantity,
-    //       product_price: produk.harga_produk,
-    //     });
-
-    //     totalPrice += produk.harga_produk * item.quantity;
-    //     await orderItem.save();
-    //     return orderItem._id;
-    //   })
-    // );
-
-    // const order = new Order({
-    //   total_price: totalPrice,
-    //   order_items: createdOrderItems,
-    //   payment_method: payment_method || 'cash',
-    //   payment_status: 'unpaid',
-    // });
-
-    // await order.save();
-    // await OrderItem.updateMany(
-    //   { _id: { $in: createdOrderItems } },
-    //   { order_id: order._id }
-    // );
-
-    let totalPrice = 0;
-    let order_items_detail = [];
-
     // Looping semua isi dari body request, dengan nama order_items
+    await Promise.all(
+      //pakai promise all biar async nyo bejalan terus sampe proses mappingny selesai
+      order_items.map(async (item) => {
+        const produk = await Produk.findById(item.product_id);
 
-    order_items.map(async (item) => {
-      console.log('a');
-      let items = {
-        product_id: item.product_id,
-        quantity: item.quantity,
-      };
+        let items = {
+          product_id: item.product_id,
+          quantity: item.quantity,
+          product_name: produk.nama_produk,
+        };
 
-      order_items_detail.push(items);
-    });
+        order_items_detail.push(items);
+      })
+    );
+
+    //petake galo2 samoke isimencak di model, tarok galo2 keperluan disini
 
     const result = await Order.create({
       order_items: order_items_detail,

@@ -25,6 +25,9 @@ const orderSchema = new mongoose.Schema(
           type: String,
           required: [true, 'ID produk wajib diisi'],
         },
+        product_name: {
+          type: String,
+        },
         quantity: {
           type: Number,
           required: [true, 'Jumlah wajib diisi'],
