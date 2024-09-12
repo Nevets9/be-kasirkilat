@@ -19,6 +19,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Total harga wajib diisi'],
     },
+    total_price_with_tax: {
+      type: Number,
+      required: [true, 'Total harga wajib diisi'],
+    },
     order_items: [
       {
         product_id: {
@@ -39,19 +43,19 @@ const orderSchema = new mongoose.Schema(
       enum: ['cash', 'e_wallet', 'bank_transfer'],
       required: [true, 'Metode pembayaran wajib diisi'],
     },
-    // tax: {
-    //   type: Number,
-    //   required: [true, 'Pajak wajib diisi'],
-    //   default: 0.11,
-    // },
-    // coupon: {
-    //   type: String,
-    //   default: null,
-    // },
-    // discount_amount: {
-    //   type: Number,
-    //   default: 0,
-    // },
+    tax: {
+      type: Number,
+      required: [true, 'Pajak wajib diisi'],
+      default: 0.11,
+    },
+    coupon: {
+      type: String,
+      default: null,
+    },
+    discount_amount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

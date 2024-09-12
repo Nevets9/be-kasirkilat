@@ -17,6 +17,7 @@ exports.createOrder = async (req, res) => {
 
   let totalPrice = 0;
   let order_items_detail = [];
+  const tax = 0.11;
   try {
     // Looping semua isi dari body request, dengan nama order_items
     await Promise.all(
@@ -30,6 +31,8 @@ exports.createOrder = async (req, res) => {
           product_name: produk.nama_produk,
         };
 
+        totalPrice += produk.harga_produk * item.quantity;
+
         order_items_detail.push(items);
       })
     );
@@ -38,8 +41,9 @@ exports.createOrder = async (req, res) => {
 
     const result = await Order.create({
       order_items: order_items_detail,
-      total_price: 696969,
-      payment_method: 'cash',
+      total_price: totalPrice,
+      total_price_with_tax: totalPrice + totalPrice * tax,
+      payment_method: payment_method,
     });
 
     res.status(201).send({
