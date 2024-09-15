@@ -7,6 +7,7 @@ router
   .route('/')
   .get(couponController.getAllCoupon)
   .post(couponController.createCoupon);
+
 // router
 //   .route('/:id')
 //   .get(couponController.getCouponById)
