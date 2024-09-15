@@ -1,11 +1,7 @@
 const Produk = require('../models/produkModel');
-const slugify = require('slugify');
 
 exports.createProduk = async (req, res) => {
   try {
-    const slug = slugify(req.body.nama_produk, { lower: true, strict: true });
-    req.body.slug_produk = slug;
-
     const newProduk = await Produk.create(req.body);
     res.status(201).send({
       status: 'success',
