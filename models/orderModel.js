@@ -15,10 +15,6 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Total harga wajib diisi'],
     },
-    total_price_with_discount: {
-      type: Number,
-      default: 0,
-    },
     total_price_with_tax: {
       type: Number,
       required: [true, 'Total harga wajib diisi'],
@@ -49,15 +45,8 @@ const orderSchema = new mongoose.Schema(
       default: 0.11,
     },
     coupon: {
-      couponId: {
-        type: String,
-      },
-      kodeCoupon: {
-        type: String,
-      },
-      besarDiscount: {
-        type: Number,
-      },
+      type: String,
+      default: null,
     },
     discount_amount: {
       type: Number,

@@ -1,6 +1,5 @@
 const Produk = require('../models/produkModel');
 const Order = require('../models/orderModel');
-const Coupon = require('../models/couponModel');
 
 exports.getAllOrders = async (req, res) => {
   const orders = await Order.find();
@@ -38,31 +37,13 @@ exports.createOrder = async (req, res) => {
       })
     );
 
-    let couponDetails = [];
-    let totalPriceDiscount = 0;
-    if (req.body.coupon) {
-      const couponValue = await Coupon.findById(req.body.coupon.couponId);
-      let couponItems = {
-        couponId: req.body.coupon.couponId,
-        kodeCoupon: couponValue.kodeCoupon,
-        besarDiscount: couponValue.besarDiscount,
-      };
-      couponDetails.push(couponItems);
-
-      totalPriceDiscount =
-        totalPrice - totalPrice * couponDetails[0].besarDiscount;
-    }
+    //petake galo2 samoke isimencak di model, tarok galo2 keperluan disini
 
     const result = await Order.create({
       order_items: order_items_detail,
       total_price: totalPrice,
-      total_price_with_discount: totalPriceDiscount || 0,
-      total_price_with_tax:
-        totalPriceDiscount + totalPriceDiscount * tax ||
-        totalPrice + totalPrice * tax,
-      coupon: couponDetails[0] || null,
+      total_price_with_tax: totalPrice + totalPrice * tax,
       payment_method: payment_method,
-      discount_amount: couponDetails[0]?.besarDiscount || 0,
     });
 
     res.status(201).send({

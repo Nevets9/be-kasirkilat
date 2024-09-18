@@ -9,13 +9,12 @@ const couponSchema = new mongoose.Schema(
     awalCoupon: {
       type: Date,
       required: [true, 'Tanggal Awal Coupon wajib diisi'],
-      default: Date.now(),
     },
     akhirCoupon: {
       type: Date,
       required: [true, 'Tanggal Akhir Coupon wajib diisi'],
     },
-    besarDiscount: {
+    besarCoupon: {
       type: Number,
       required: [true, 'Besar Coupon wajib diisi'],
     },
