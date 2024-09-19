@@ -40,34 +40,26 @@ exports.loginUser = async (req, res) => {
     const { nomorPegawai, password } = req.body;
     const user = await User.findOne({ nomorPegawai });
     if (!user) {
-      return res.status(404).json({
+      return res.status(401).json({
         status: 'fail',
         message: 'Nomor Pegawai or Password is incorrect',
       });
     }
 
     if (password != user.password) {
-      return res.status(404).json({
+      return res.status(401).json({
         status: 'fail',
         message: 'Nomor Pegawai or Password is incorrect',
       });
     }
 
-    if (user.role == 'admin') {
-      res.status(200).json({
-        message: 'Login successful',
-        data: {
-          user: user,
-        },
-      });
-    } else if (user.role == 'user') {
-      res.status(200).json({
-        message: 'Login successful',
-        data: {
-          user: user,
-        },
-      });
-    }
+    res.status(200).json({
+      message: 'Login successful',
+      data: {
+        user: user,
+        jwt: 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyNjc2NDU0OSwiaWF0IjoxNzI2NzY0NTQ5fQ.hh9Xx59O9l5U0gHOmFIt7xLCW6NK4-EYNLj2AeyPwNA',
+      },
+    });
   } catch (error) {
     res.status(404).json({
       status: 'fail',
