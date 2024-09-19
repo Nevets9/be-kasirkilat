@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const produkRoutes = require('./routes/produkRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const couponRoutes = require('./routes/couponRoutes');
+const userRoutes = require('./routes/userRoutes');
 const path = require('path'); // Tambahkan ini
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/produk', produkRoutes);
 app.use('/api/v1/order', orderRoutes);
 app.use('/api/v1/coupon', couponRoutes);
+app.use('/api/v1/user', userRoutes);
 
 // 4. SERVER
 module.exports = app;
