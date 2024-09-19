@@ -1,5 +1,5 @@
 ROUTE LOGIN USER (POST):
-/api/v1/user
+https://be-kasirkilat.vercel.app//api/v1/user
 request:
 {
     "nomorPegawai": "KASIR1",
@@ -21,7 +21,7 @@ response:
 }
 
 ROUTE CREATE USER (POST):
-/api/v1/user/create
+https://be-kasirkilat.vercel.app//api/v1/user/create
 request:
 {
     "nama": "Kasir2",
@@ -45,10 +45,10 @@ response:
 }
 
 ROUTE GET ALL PRODUKS (GET):
-/api/v1/produk
+https://be-kasirkilat.vercel.app//api/v1/produk
 
 ROUTE CREATE PRODUK (POST):
-/api/v1/produk
+https://be-kasirkilat.vercel.app//api/v1/produk
 request:
 {
     "nama_produk": "Sapi Goreng",
@@ -75,10 +75,10 @@ response:
 }
 
 ROUTE GET PRODUK BY ID (GET):
-/api/v1/produk/:id
+https://be-kasirkilat.vercel.app//api/v1/produk/:id
 
 ROUTE UPDATE BY ID (PATCH):
-/api/v1/produk/:id
+https://be-kasirkilat.vercel.app//api/v1/produk/:id
 request:
 {
     "harga_produk": "30000"
@@ -103,13 +103,13 @@ response:
 }
 
 ROUTE DELETE BY ID (DELETE):
-/api/v1/produk/:id
+https://be-kasirkilat.vercel.app//api/v1/produk/:id
 
 ROUTE GET ALL ORDERS (GET):
-/api/v1/order
+https://be-kasirkilat.vercel.app//api/v1/order
 
 ROUTE CREATE ORDER (POST):
-/api/v1/order
+https://be-kasirkilat.vercel.app//api/v1/order
 request:
 {
     "order_items": [
@@ -152,10 +152,10 @@ response:
     }
 }
 ROUTE GET ALL COUPONS (GET):
-/api/v1/coupon
+https://be-kasirkilat.vercel.app//api/v1/coupon
 
 ROUTE CREATE COUPON (POST):
-/api/v1/coupon
+https://be-kasirkilat.vercel.app//api/v1/coupon
 request: 
 {
     "kodeCoupon": "KUPONTEST2",
