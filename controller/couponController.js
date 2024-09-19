@@ -33,3 +33,23 @@ exports.createCoupon = async (req, res) => {
     });
   }
 };
+
+exports.deleteCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.findByIdAndDelete(req.params.id);
+    if (!coupon) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'Produk tidak ditemukan' });
+    }
+    res.status(204).send({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};

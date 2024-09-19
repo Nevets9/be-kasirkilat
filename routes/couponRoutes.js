@@ -8,10 +8,8 @@ router
   .get(couponController.getAllCoupon)
   .post(couponController.createCoupon);
 
-// router
-//   .route('/:id')
-//   .get(couponController.getCouponById)
-//   .patch(couponController.updateCoupon)
-//   .delete(couponController.deleteCoupon);
+router
+  .route('/:id')
+  .delete(couponController.deleteCoupon);
 
 module.exports = router;
