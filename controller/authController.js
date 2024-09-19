@@ -1,5 +1,21 @@
 const User = require('../models/userModel');
 
+exports.getAllUser = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json({
+      status: 'success',
+      result: users.length,
+      data: { users },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 exports.createUser = async (req, res) => {
   try {
     const { nama, nomorPegawai, password, role } = req.body;
