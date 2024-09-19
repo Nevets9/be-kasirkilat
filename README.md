@@ -1,28 +1,32 @@
-ROUTE LOGIN USER :
+ROUTE LOGIN USER (POST):
 /api/v1/user
-post (login user)
 
-ROUTE CREATE USER :
+ROUTE CREATE USER (POST):
 /api/v1/user/create
-post (create user)
 
-ROUTE PRODUK :
+ROUTE GET ALL PRODUKS (GET):
 /api/v1/produk
-get (get all produk)
-post (create produk)
 
-ROUTE PRODUK BY ID :
+ROUTE CREATE PRODUK (POST):
+/api/v1/produk
+
+ROUTE GET PRODUK BY ID (GET):
 /api/v1/produk/:id
-get (get produk by id)
-patch (update produk by id)
-delete (delete produk by id)
 
-ROUTE ORDER :
+ROUTE UPDATE BY ID (PATCH):
+/api/v1/produk/:id
+
+ROUTE DELETE BY ID (DELETE):
+/api/v1/produk/:id
+
+ROUTE GET ALL ORDERS (GET):
 /api/v1/order
-get (get all orders)
-post (create order)
 
-ROUTE COUPON :
+ROUTE CREATE ORDER (POST):
+/api/v1/order
+
+ROUTE GET ALL COUPONS (GET):
 /api/v1/coupon
-get (get all coupon)
-post (create coupon)
+
+ROUTE CREATE COUPON (POST):
+/api/v1/coupon
