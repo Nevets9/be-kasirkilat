@@ -1,12 +1,9 @@
-USER:
 ROUTE LOGIN USER (POST):
 /api/v1/user
 
 ROUTE CREATE USER (POST):
 /api/v1/user/create
 
-
-PRODUK:
 ROUTE GET ALL PRODUKS (GET):
 /api/v1/produk
 
@@ -22,16 +19,12 @@ ROUTE UPDATE BY ID (PATCH):
 ROUTE DELETE BY ID (DELETE):
 /api/v1/produk/:id
 
-
-ORDER:
 ROUTE GET ALL ORDERS (GET):
 /api/v1/order
 
 ROUTE CREATE ORDER (POST):
 /api/v1/order
 
-
-COUPON:
 ROUTE GET ALL COUPONS (GET):
 /api/v1/coupon
 
