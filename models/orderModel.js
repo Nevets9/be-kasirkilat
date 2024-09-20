@@ -46,7 +46,7 @@ const orderSchema = new mongoose.Schema(
     tax: {
       type: Number,
       required: [true, 'Pajak wajib diisi'],
-      default: 0.11,
+      default: 0.1,
     },
     coupon: {
       couponId: {

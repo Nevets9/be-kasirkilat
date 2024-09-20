@@ -18,7 +18,7 @@ exports.createOrder = async (req, res) => {
 
   let totalPrice = 0;
   let order_items_detail = [];
-  const tax = 0.11;
+  const tax = 0.1;
   try {
     // Looping semua isi dari body request, dengan nama order_items
     await Promise.all(
