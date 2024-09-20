@@ -242,10 +242,6 @@ exports.getAllPelanggan = async (req, res) => {
     const chartData31Days = generateOrderCountData(last31DaysData, 31);
     const chartData1Year = generateOrderCountData(last1YearData, 365);
 
-    console.log(chartData7Days);
-    console.log(chartData31Days);
-    console.log(chartData1Year);
-
     res.status(200).send({
       status: 'success',
       data: {
