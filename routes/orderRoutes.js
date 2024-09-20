@@ -10,4 +10,5 @@ router
 
 router.route('/statistics').get(orderController.getAllStatistics);
 router.route('/statistics/pendapatan').get(orderController.getAllPendapatan);
+router.route('/statistics/pelanggan').get(orderController.getAllPelanggan);
 module.exports = router;

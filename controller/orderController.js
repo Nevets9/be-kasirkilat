@@ -187,3 +187,77 @@ exports.getAllPendapatan = async (req, res) => {
     });
   }
 };
+
+exports.getAllPelanggan = async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    const filterByDateRange = (days) => {
+      const now = new Date();
+      return orders.filter((item) => {
+        const diffTime = Math.abs(now.getTime() - item.order_date.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= days;
+      });
+    };
+
+    // Function to generate chartData with order count per day
+    const generateOrderCountData = (filteredData, daysRange) => {
+      const now = new Date();
+      const chartData = [];
+
+      for (let i = 0; i < daysRange; i++) {
+        const date = new Date(now);
+        date.setDate(now.getDate() - i);
+
+        const formattedDate = `${date.getDate()} ${date.toLocaleString(
+          'id-ID',
+          {
+            month: 'long',
+          }
+        )}`;
+
+        // Count total orders for the day
+        const totalOrders = filteredData.filter(
+          (item) =>
+            item.order_date.toLocaleDateString() === date.toLocaleDateString()
+        ).length;
+
+        chartData.push({
+          date: formattedDate,
+          orders: totalOrders,
+        });
+      }
+
+      return chartData.reverse(); // To get the dates in ascending order
+    };
+
+    // Get data for the last 7, 31 days, and 1 year
+    const last7DaysData = filterByDateRange(7);
+    const last31DaysData = filterByDateRange(31);
+    const last1YearData = filterByDateRange(365);
+
+    // Generate chart data with order counts
+    const chartData7Days = generateOrderCountData(last7DaysData, 7);
+    const chartData31Days = generateOrderCountData(last31DaysData, 31);
+    const chartData1Year = generateOrderCountData(last1YearData, 365);
+
+    console.log(chartData7Days);
+    console.log(chartData31Days);
+    console.log(chartData1Year);
+
+    res.status(200).send({
+      status: 'success',
+      data: {
+        oneweek: chartData7Days,
+        onemonth: chartData31Days,
+        threemonth: chartData1Year,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
