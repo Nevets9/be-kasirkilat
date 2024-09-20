@@ -18,7 +18,6 @@ exports.createProduk = async (req, res) => {
   }
 };
 
-// READ semua produk
 exports.getAllProduk = async (req, res) => {
   try {
     const produk = await Produk.find();
@@ -35,7 +34,6 @@ exports.getAllProduk = async (req, res) => {
   }
 };
 
-// READ produk by ID
 exports.getProdukById = async (req, res) => {
   try {
     const produk = await Produk.findById(req.params.id);
@@ -56,7 +54,6 @@ exports.getProdukById = async (req, res) => {
   }
 };
 
-// UPDATE produk by ID
 exports.updateProduk = async (req, res) => {
   try {
     const produk = await Produk.findByIdAndUpdate(req.params.id, req.body, {
@@ -82,7 +79,6 @@ exports.updateProduk = async (req, res) => {
   }
 };
 
-// DELETE produk by ID
 exports.deleteProduk = async (req, res) => {
   try {
     const produk = await Produk.findByIdAndDelete(req.params.id);

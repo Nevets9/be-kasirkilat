@@ -75,3 +75,23 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'User tidak ditemukan' });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: { user },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};

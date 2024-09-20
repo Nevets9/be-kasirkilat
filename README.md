@@ -1,6 +1,9 @@
 ROUTE GET ALL USER (GET):
 https://be-kasirkilat.vercel.app//api/v1/user
 
+ROUTE GET USER BY ID(GET):
+https://be-kasirkilat.vercel.app//api/v1/user/:id
+
 ROUTE LOGIN USER (POST):
 https://be-kasirkilat.vercel.app//api/v1/user
 request:
