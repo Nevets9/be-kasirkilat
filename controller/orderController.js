@@ -41,9 +41,9 @@ exports.createOrder = async (req, res) => {
     let couponDetails = [];
     let totalPriceDiscount = 0;
     if (req.body.coupon) {
-      const couponValue = await Coupon.findById(req.body.coupon.couponId);
+      const couponValue = await Coupon.findById(req.body.coupon);
       let couponItems = {
-        couponId: req.body.coupon.couponId,
+        couponId: req.body.coupon,
         kodeCoupon: couponValue.kodeCoupon,
         besarDiscount: couponValue.besarDiscount,
       };
