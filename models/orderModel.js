@@ -40,7 +40,7 @@ const orderSchema = new mongoose.Schema(
     ],
     payment_method: {
       type: String,
-      enum: ['cash', 'e_wallet', 'bank_transfer'],
+      enum: ['cash', 'qris', 'debit'],
       required: [true, 'Metode pembayaran wajib diisi'],
     },
     tax: {
