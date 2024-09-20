@@ -84,17 +84,28 @@ exports.getAllStatistics = async (req, res) => {
     const orders = await Order.find();
 
     let totalIncome = 0;
+    let totalQuantity = 0;
+    let totalCouponUse = 0;
     orders.map((item) => {
       totalIncome += item.total_price_with_tax;
 
-    });
+      const order_items = item.order_items;
+      order_items.map((result) => {
+        totalQuantity += result.quantity;
+      });
 
-    console.log(totalIncome);
+      if (item.coupon.couponId) {
+        totalCouponUse += 1;
+      }
+    });
 
     res.status(200).send({
       status: 'success',
       data: {
         totalIncome: totalIncome,
+        totalQuantity: totalQuantity,
+        totalOrders: orders.length,
+        totalCouponUse: totalCouponUse,
       },
     });
   } catch (err) {
