@@ -39,6 +39,10 @@ exports.loginUser = async (req, res) => {
   try {
     const { nomorPegawai, password } = req.body;
     const user = await User.findOne({ nomorPegawai });
+
+    user.lastActive = Date.now();
+    await user.save();
+    
     if (!user) {
       return res.status(401).json({
         status: 'fail',

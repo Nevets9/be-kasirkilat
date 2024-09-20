@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema({
     default: 'user',
     required: [true, 'Role Wajib Diisi'],
   },
+  lastActive: {
+    type: Date,
+  }
 });
 
 const User = mongoose.model('User', userSchema);
