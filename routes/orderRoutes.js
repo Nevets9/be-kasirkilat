@@ -8,5 +8,5 @@ router
   .post(orderController.createOrder)
   .get(orderController.getAllOrders);
 
-
+router.route('/statistics').get(orderController.getAllStatistics);
 module.exports = router;

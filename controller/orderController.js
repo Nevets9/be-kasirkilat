@@ -78,3 +78,29 @@ exports.createOrder = async (req, res) => {
     });
   }
 };
+
+exports.getAllStatistics = async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    let totalIncome = 0;
+    orders.map((item) => {
+      totalIncome += item.total_price_with_tax;
+
+    });
+
+    console.log(totalIncome);
+
+    res.status(200).send({
+      status: 'success',
+      data: {
+        totalIncome: totalIncome,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
