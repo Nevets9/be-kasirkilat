@@ -6,11 +6,6 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    status: {
-      type: String,
-      enum: ['pending', 'completed', 'canceled'],
-      default: 'pending',
-    },
     total_price: {
       type: Number,
       required: [true, 'Total harga wajib diisi'],
