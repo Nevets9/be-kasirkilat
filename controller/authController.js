@@ -42,7 +42,7 @@ exports.loginUser = async (req, res) => {
 
     user.lastActive = Date.now();
     await user.save();
-    
+
     if (!user) {
       return res.status(401).json({
         status: 'fail',
@@ -83,6 +83,38 @@ exports.getUserById = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: { user },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    res.status(204).send({
+      status: 'success',
+      data: null,
     });
   } catch (err) {
     res.status(404).json({
