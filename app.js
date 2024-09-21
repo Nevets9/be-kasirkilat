@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const produkRoutes = require('./routes/produkRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const couponRoutes = require('./routes/couponRoutes');
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(cors());
 app.use(express.json());
 
 // Tambahkan ini untuk melayani file statis
