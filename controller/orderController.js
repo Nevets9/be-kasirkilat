@@ -86,6 +86,7 @@ exports.getAllStatistics = async (req, res) => {
     let totalIncome = 0;
     let totalQuantity = 0;
     let totalCouponUse = 0;
+
     orders.map((item) => {
       totalIncome += item.total_price_with_tax;
 
@@ -251,6 +252,89 @@ exports.getAllPelanggan = async (req, res) => {
       },
     });
   } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.getPopularMenu = async (req, res) => {
+  let firstDate;
+  let lastDate;
+
+  const monthNow = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  console.log(monthNow);
+  console.log(currentYear);
+
+  if (req.params.mon == 0) {
+    lastDate = new Date();
+    firstDate = new Date(`${currentYear}-${monthNow}-01`);
+  } else if (req.params.mon == 1) {
+    lastDate = new Date(`${currentYear}-${monthNow - req.params.mon}-30`);
+    firstDate = new Date(`${currentYear}-${monthNow - req.params.mon}-01`);
+  } else if (req.params.mon == 2) {
+    lastDate = new Date(`${currentYear}-${monthNow - req.params.mon}-30`);
+    firstDate = new Date(`${currentYear}-${monthNow - req.params.mon}-01`);
+  }
+  try {
+    // const today = new Date();
+    // const lastMonth = new Date(today);
+    // lastMonth.setMonth(today.getMonth() - 1); // Mengurangi satu bulan
+    // console.log(lastMonth);
+
+    // Query untuk mendapatkan order antara `lastMonth` dan `today`
+    const orders = await Order.find({
+      order_date: {
+        $gte: firstDate, // Greater than or equal to (>=)
+        $lte: lastDate, // Less than or equal to (<=)
+      },
+    });
+
+    // Fungsi untuk mendapatkan 3 produk yang paling banyak dipesan
+    const getTopThreeProducts = (orders) => {
+      const productCount = {};
+
+      // Iterasi setiap order untuk mendapatkan order_items
+      orders.forEach((order) => {
+        order.order_items.forEach((item) => {
+          const productName = item.product_name;
+
+          // Jika produk sudah ada di productCount, tambahkan quantity, jika tidak, inisialisasi
+          if (productCount[productName]) {
+            productCount[productName] += item.quantity;
+          } else {
+            productCount[productName] = item.quantity;
+          }
+        });
+      });
+
+      // Konversi objek ke array untuk sorting
+      const productArray = Object.entries(productCount).map(
+        ([productName, count]) => ({
+          product_name: productName,
+          count: count,
+        })
+      );
+
+      // Urutkan array berdasarkan jumlah yang terbanyak
+      productArray.sort((a, b) => b.count - a.count);
+
+      // Ambil 3 produk yang paling banyak dipesan
+      return productArray.slice(0, 3);
+    };
+
+    // Panggil fungsi untuk mendapatkan hasil
+    const topThreeProducts = getTopThreeProducts(orders);
+
+    res.status(200).send({
+      status: 'success',
+      data: topThreeProducts,
+      lastDate,
+      firstDate,
+    });
+  } catch (error) {
     res.status(400).json({
       status: 'fail',
       message: err.message,
