@@ -6,7 +6,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const userRoutes = require('./routes/userRoutes');
 const tokoRoutes = require('./routes/tokoRoutes');
-const path = require('path'); // Tambahkan ini
+const path = require('path')
 
 const app = express();
 
