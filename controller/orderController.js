@@ -87,23 +87,22 @@ exports.getAllStatistics = async (req, res) => {
     let totalQuantity = 0;
     let totalCouponUse = 0;
 
-    orders.map((item) => {
+    orders.forEach((item) => {
       totalIncome += item.total_price_with_tax;
 
-      const order_items = item.order_items;
-      order_items.map((result) => {
+      item.order_items.forEach((result) => {
         totalQuantity += result.quantity;
       });
 
-      if (item.coupon.couponId) {
+      if (item.coupon && item.coupon.couponId) {
         totalCouponUse += 1;
       }
     });
 
-    function filterOrdersByTime(hours) {
+    // Fungsi untuk memfilter pesanan berdasarkan jumlah hari
+    function filterOrdersByDays(days) {
       const now = new Date();
-      const timeLimit = new Date(now.getTime() - hours * 60 * 60 * 1000);
-
+      const timeLimit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
       return orders.filter((order) => new Date(order.createdAt) >= timeLimit);
     }
 
@@ -114,10 +113,11 @@ exports.getAllStatistics = async (req, res) => {
         totalQuantity: totalQuantity,
         totalOrders: orders.length,
         totalCouponUse: totalCouponUse,
-        ordersOneHour: filterOrdersByTime(1),
-        ordersSixHour: filterOrdersByTime(6),
-        ordersTwelveHour: filterOrdersByTime(12),
-        ordersOneDay: filterOrdersByTime(24),
+        ordersOneHour: filterOrdersByDays(1 / 24), // 1 jam = 1/24 hari
+        ordersSixHour: filterOrdersByDays(6 / 24), // 6 jam = 6/24 hari
+        ordersTwelveHour: filterOrdersByDays(12 / 24), // 12 jam = 12/24 hari
+        ordersOneDay: filterOrdersByDays(1), // 1 hari
+        ordersOneMonth: filterOrdersByDays(30), // 1 bulan
       },
     });
   } catch (err) {
@@ -193,16 +193,14 @@ exports.getAllPelanggan = async (req, res) => {
   try {
     const orders = await Order.find();
 
+    // Fungsi untuk memfilter pesanan berdasarkan jumlah hari
     const filterByDateRange = (days) => {
       const now = new Date();
-      return orders.filter((item) => {
-        const diffTime = Math.abs(now.getTime() - item.order_date.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays <= days;
-      });
+      const timeLimit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+      return orders.filter((item) => new Date(item.order_date) >= timeLimit);
     };
 
-    // Function to generate chartData with order count per day
+    // Fungsi untuk menghasilkan data chart berdasarkan jumlah pesanan per hari
     const generateOrderCountData = (filteredData, daysRange) => {
       const now = new Date();
       const chartData = [];
@@ -218,10 +216,11 @@ exports.getAllPelanggan = async (req, res) => {
           }
         )}`;
 
-        // Count total orders for the day
+        // Menghitung jumlah pesanan pada hari tersebut
         const totalOrders = filteredData.filter(
           (item) =>
-            item.order_date.toLocaleDateString() === date.toLocaleDateString()
+            new Date(item.order_date).toLocaleDateString() ===
+            date.toLocaleDateString()
         ).length;
 
         chartData.push({
@@ -230,15 +229,15 @@ exports.getAllPelanggan = async (req, res) => {
         });
       }
 
-      return chartData.reverse(); // To get the dates in ascending order
+      return chartData.reverse(); // Mengembalikan data agar urut dari tanggal terlama ke terbaru
     };
 
-    // Get data for the last 7, 31 days, and 1 year
+    // Mendapatkan data untuk 7 hari, 31 hari, dan 1 tahun terakhir
     const last7DaysData = filterByDateRange(7);
     const last31DaysData = filterByDateRange(31);
     const last1YearData = filterByDateRange(365);
 
-    // Generate chart data with order counts
+    // Menghasilkan data chart dengan jumlah pesanan
     const chartData7Days = generateOrderCountData(last7DaysData, 7);
     const chartData31Days = generateOrderCountData(last31DaysData, 31);
     const chartData1Year = generateOrderCountData(last1YearData, 365);
@@ -248,7 +247,7 @@ exports.getAllPelanggan = async (req, res) => {
       data: {
         oneweek: chartData7Days,
         onemonth: chartData31Days,
-        threemonth: chartData1Year,
+        threemonth: chartData1Year, // Perbaikan: Harusnya mungkin 'oneyear'
       },
     });
   } catch (err) {
