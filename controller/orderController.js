@@ -158,7 +158,7 @@ exports.getAllPendapatan = async (req, res) => {
         startOfWeek.setDate(now.getDate() - (week + 1) * 7);
         endOfWeek.setDate(now.getDate() - week * 7);
 
-        const formattedWeek = `Week ${weeksRange - week}`;
+        const formattedWeek = `Minggu ke-${weeksRange - week}`;
 
         // Total pendapatan untuk satu minggu tersebut
         const totalIncome = filteredData
