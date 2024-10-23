@@ -321,7 +321,7 @@ exports.getPopularMenu = async (req, res) => {
 
     const getGambarProduk = async (productName) => {
       const produk = await Produk.findOne({ nama_produk: productName });
-      return produk ? produk.gambar_produk : 'default-image.jpg'; // Gunakan gambar default jika null
+      return produk ? produk.gambar_produk : null; // Gunakan gambar default jika null
     };
 
     const getTopThreeProducts = async (orders) => {
