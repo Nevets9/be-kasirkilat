@@ -87,7 +87,18 @@ exports.getAllStatistics = async (req, res) => {
     let totalQuantity = 0;
     let totalCouponUse = 0;
 
-    orders.forEach((item) => {
+    // Fungsi untuk memfilter pesanan berdasarkan jumlah hari (1 bulan)
+    function filterOrdersByDays(days) {
+      const now = new Date();
+      const timeLimit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+      return orders.filter((order) => new Date(order.createdAt) >= timeLimit);
+    }
+
+    // Filter orders untuk 1 bulan terakhir
+    const filteredOrders = filterOrdersByDays(30);
+
+    // Menghitung total income, quantity, dan coupon use dari orders yang terfilter
+    filteredOrders.forEach((item) => {
       totalIncome += item.total_price_with_tax;
 
       item.order_items.forEach((result) => {
@@ -99,25 +110,18 @@ exports.getAllStatistics = async (req, res) => {
       }
     });
 
-    // Fungsi untuk memfilter pesanan berdasarkan jumlah hari
-    function filterOrdersByDays(days) {
-      const now = new Date();
-      const timeLimit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-      return orders.filter((order) => new Date(order.createdAt) >= timeLimit);
-    }
-
     res.status(200).send({
       status: 'success',
       data: {
         totalIncome: totalIncome,
         totalQuantity: totalQuantity,
-        totalOrders: orders.length,
+        totalOrders: filteredOrders.length, // Hanya orders dalam 1 bulan terakhir
         totalCouponUse: totalCouponUse,
         ordersOneHour: filterOrdersByDays(1 / 24), // 1 jam = 1/24 hari
         ordersSixHour: filterOrdersByDays(6 / 24), // 6 jam = 6/24 hari
         ordersTwelveHour: filterOrdersByDays(12 / 24), // 12 jam = 12/24 hari
         ordersOneDay: filterOrdersByDays(1), // 1 hari
-        ordersOneMonth: filterOrdersByDays(30), // 1 bulan
+        ordersOneMonth: filteredOrders, // Pesanan dalam 1 bulan terakhir
       },
     });
   } catch (err) {
