@@ -314,54 +314,46 @@ exports.getPopularMenu = async (req, res) => {
     // Query untuk mendapatkan order antara `lastMonth` dan `today`
     const orders = await Order.find({
       order_date: {
-        $gte: firstDate,
-        $lte: lastDate,
+        $gte: firstDate, // Greater than or equal to (>=)
+        $lte: lastDate, // Less than or equal to (<=)
       },
     });
 
-    const getGambarProduk = async (productName) => {
-      const produk = await Produk.findOne({ nama_produk: productName });
-      return produk ? produk.gambar_produk : null; // Gunakan gambar default jika null
-    };
-
-    const getTopThreeProducts = async (orders) => {
+    // Fungsi untuk mendapatkan 3 produk yang paling banyak dipesan
+    const getTopThreeProducts = (orders) => {
       const productCount = {};
-      const productImages = {};
 
-      // Gunakan Promise.all untuk menjalankan operasi async secara paralel
-      await Promise.all(
-        orders.map(async (order) => {
-          await Promise.all(
-            order.order_items.map(async (item) => {
-              const productName = item.product_name;
-              if (!productImages[productName]) {
-                productImages[productName] = await getGambarProduk(productName);
-              }
+      // Iterasi setiap order untuk mendapatkan order_items
+      orders.forEach((order) => {
+        order.order_items.forEach((item) => {
+          const productName = item.product_name;
 
-              if (productCount[productName]) {
-                productCount[productName] += item.quantity;
-              } else {
-                productCount[productName] = item.quantity;
-              }
-            })
-          );
-        })
-      );
+          // Jika produk sudah ada di productCount, tambahkan quantity, jika tidak, inisialisasi
+          if (productCount[productName]) {
+            productCount[productName] += item.quantity;
+          } else {
+            productCount[productName] = item.quantity;
+          }
+        });
+      });
 
+      // Konversi objek ke array untuk sorting
       const productArray = Object.entries(productCount).map(
         ([productName, count]) => ({
           product_name: productName,
           count: count,
-          gambar_produk: productImages[productName],
         })
       );
 
+      // Urutkan array berdasarkan jumlah yang terbanyak
       productArray.sort((a, b) => b.count - a.count);
 
+      // Ambil 3 produk yang paling banyak dipesan
       return productArray.slice(0, 3);
     };
 
-    const topThreeProducts = await getTopThreeProducts(orders);
+    // Panggil fungsi untuk mendapatkan hasil
+    const topThreeProducts = getTopThreeProducts(orders);
 
     res.status(200).send({
       status: 'success',
@@ -372,7 +364,7 @@ exports.getPopularMenu = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       status: 'fail',
-      message: error.message,
+      message: err.message,
     });
   }
 };
