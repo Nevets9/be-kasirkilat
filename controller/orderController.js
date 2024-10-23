@@ -286,6 +286,11 @@ exports.getAllPelanggan = async (req, res) => {
   }
 };
 
+const getGambarProduk = async (productName) => {
+  const produk = await Produk.findOne({ nama_produk: productName });
+  return produk ? produk.gambar_produk : null;
+};
+
 exports.getPopularMenu = async (req, res) => {
   let firstDate;
   let lastDate;
@@ -318,11 +323,6 @@ exports.getPopularMenu = async (req, res) => {
         $lte: lastDate,
       },
     });
-
-    const getGambarProduk = async (productName) => {
-      const produk = await Produk.findOne({ nama_produk: productName });
-      return produk ? produk.gambar_produk : null;
-    };
 
     const getTopThreeProducts = async (orders) => {
       const productCount = {};
