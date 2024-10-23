@@ -286,11 +286,6 @@ exports.getAllPelanggan = async (req, res) => {
   }
 };
 
-const getGambarProduk = async (productName) => {
-  const produk = await Produk.findOne({ nama_produk: productName });
-  return produk ? produk.gambar_produk : null;
-};
-
 exports.getPopularMenu = async (req, res) => {
   let firstDate;
   let lastDate;
@@ -324,23 +319,34 @@ exports.getPopularMenu = async (req, res) => {
       },
     });
 
+    const getGambarProduk = async (productName) => {
+      const produk = await Produk.findOne({ nama_produk: productName });
+      return produk ? produk.gambar_produk : 'default-image.jpg'; // Gunakan gambar default jika null
+    };
+
     const getTopThreeProducts = async (orders) => {
       const productCount = {};
       const productImages = {};
 
-      for (const order of orders) {
-        for (const item of order.order_items) {
-          const productName = item.product_name;
-          const gambar_produk = await getGambarProduk(productName);
+      // Gunakan Promise.all untuk menjalankan operasi async secara paralel
+      await Promise.all(
+        orders.map(async (order) => {
+          await Promise.all(
+            order.order_items.map(async (item) => {
+              const productName = item.product_name;
+              if (!productImages[productName]) {
+                productImages[productName] = await getGambarProduk(productName);
+              }
 
-          if (productCount[productName]) {
-            productCount[productName] += item.quantity;
-          } else {
-            productCount[productName] = item.quantity;
-            productImages[productName] = gambar_produk;
-          }
-        }
-      }
+              if (productCount[productName]) {
+                productCount[productName] += item.quantity;
+              } else {
+                productCount[productName] = item.quantity;
+              }
+            })
+          );
+        })
+      );
 
       const productArray = Object.entries(productCount).map(
         ([productName, count]) => ({
