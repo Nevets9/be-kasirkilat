@@ -136,6 +136,7 @@ exports.getAllPendapatan = async (req, res) => {
   try {
     const orders = await Order.find();
 
+    // Fungsi untuk memfilter pesanan berdasarkan jumlah hari
     const filterByDateRange = (days) => {
       const now = new Date();
       return orders.filter((item) => {
@@ -145,44 +146,67 @@ exports.getAllPendapatan = async (req, res) => {
       });
     };
 
-    const generateChartData = (filteredData, daysRange) => {
+    // Fungsi untuk mengelompokkan pendapatan per minggu
+    const generateWeeklyChartData = (filteredData, weeksRange) => {
       const now = new Date();
       let chartData = [];
 
-      for (let i = 0; i < daysRange; i++) {
-        const date = new Date(now);
-        date.setDate(now.getDate() - i);
+      for (let week = 0; week < weeksRange; week++) {
+        const startOfWeek = new Date(now);
+        const endOfWeek = new Date(now);
 
-        const formattedDate = `${date.getDate()} ${date.toLocaleString(
-          'id-ID',
-          {
-            month: 'long',
-          }
-        )}`;
+        startOfWeek.setDate(now.getDate() - (week + 1) * 7);
+        endOfWeek.setDate(now.getDate() - week * 7);
 
+        const formattedWeek = `Week ${weeksRange - week}`;
+
+        // Total pendapatan untuk satu minggu tersebut
         const totalIncome = filteredData
-          .filter(
-            (item) =>
-              item.order_date.toLocaleDateString() === date.toLocaleDateString()
-          )
+          .filter((item) => {
+            const orderDate = new Date(item.order_date);
+            return orderDate >= startOfWeek && orderDate < endOfWeek;
+          })
           .reduce((sum, item) => sum + item.total_price_with_tax, 0);
 
         chartData.push({
-          date: formattedDate,
+          week: formattedWeek,
           income: totalIncome,
         });
       }
 
-      return chartData.reverse();
+      return chartData.reverse(); // Urutkan minggu dari terlama ke terbaru
     };
+
+    // Menghitung jumlah minggu berdasarkan rentang hari
+    const weeksInMonth = Math.ceil(31 / 7); // 31 hari, dibagi 7 hari per minggu
+    const weeksInTwoMonths = Math.ceil(62 / 7); // 62 hari, dibagi 7 hari per minggu
+    const weeksInThreeMonths = Math.ceil(93 / 7); // 93 hari, dibagi 7 hari per minggu
+
+    // Mendapatkan data untuk 1 bulan, 2 bulan, dan 3 bulan
+    const lastOneMonthData = filterByDateRange(31);
+    const lastTwoMonthData = filterByDateRange(62);
+    const lastThreeMonthData = filterByDateRange(93);
+
+    // Menghasilkan data pendapatan mingguan
+    const weeklyDataOneMonth = generateWeeklyChartData(
+      lastOneMonthData,
+      weeksInMonth
+    );
+    const weeklyDataTwoMonth = generateWeeklyChartData(
+      lastTwoMonthData,
+      weeksInTwoMonths
+    );
+    const weeklyDataThreeMonth = generateWeeklyChartData(
+      lastThreeMonthData,
+      weeksInThreeMonths
+    );
 
     res.status(200).send({
       status: 'success',
       data: {
-        oneweek: generateChartData(filterByDateRange(7), 7),
-        onemonth: generateChartData(filterByDateRange(31), 31),
-        threemonth: generateChartData(filterByDateRange(93), 93),
-        twelvemonth: generateChartData(filterByDateRange(365), 365),
+        oneMonth: weeklyDataOneMonth,
+        twoMonth: weeklyDataTwoMonth,
+        threeMonth: weeklyDataThreeMonth,
       },
     });
   } catch (err) {
