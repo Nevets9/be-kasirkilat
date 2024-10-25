@@ -10,6 +10,7 @@ router
 
 router
   .route('/:id')
+  .patch(couponController.updateCoupon)
   .delete(couponController.deleteCoupon);
 
 module.exports = router;

@@ -34,6 +34,31 @@ exports.createCoupon = async (req, res) => {
   }
 };
 
+exports.updateCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!coupon) {
+      return res
+        .status(404)
+        .json({ status: 'fail', message: 'Coupon tidak ditemukan' });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        coupon,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
 exports.deleteCoupon = async (req, res) => {
   try {
     const coupon = await Coupon.findByIdAndDelete(req.params.id);
